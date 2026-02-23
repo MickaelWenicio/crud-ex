@@ -1,0 +1,55 @@
+<div class="shell-layout">
+  <mat-toolbar color="primary" class="toolbar">
+    <span>Painel Administrativo</span>
+    <span class="spacer"></span>
+    <button mat-stroked-button (click)="logout()">
+      <mat-icon>logout</mat-icon>
+      Sair
+    </button>
+  </mat-toolbar>
+
+  <mat-sidenav-container class="container">
+    <mat-sidenav mode="side" opened class="sidenav">
+      <div class="brand">
+        <h2>CRUD EX</h2>
+        <small>{{ user()?.email }}</small>
+        <small>Perfil: {{ user()?.role }}</small>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <mat-nav-list>
+        <a mat-list-item routerLink="/" routerLinkActive="active">
+          <mat-icon matListItemIcon>home</mat-icon>
+          <span matListItemTitle>Inicio</span>
+        </a>
+
+        <a *ngIf="isAdmin()" mat-list-item routerLink="/users" routerLinkActive="active">
+          <mat-icon matListItemIcon>group</mat-icon>
+          <span matListItemTitle>Usuarios</span>
+        </a>
+
+        <a *ngIf="isAdmin()" mat-list-item routerLink="/clients" routerLinkActive="active">
+          <mat-icon matListItemIcon>badge</mat-icon>
+          <span matListItemTitle>Clientes</span>
+        </a>
+
+        <a mat-list-item routerLink="/products" routerLinkActive="active">
+          <mat-icon matListItemIcon>inventory_2</mat-icon>
+          <span matListItemTitle>Produtos</span>
+        </a>
+
+        <a mat-list-item routerLink="/orders" routerLinkActive="active">
+          <mat-icon matListItemIcon>receipt_long</mat-icon>
+          <span matListItemTitle>Pedidos</span>
+        </a>
+      </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+      <main class="content">
+        <router-outlet></router-outlet>
+      </main>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</div>

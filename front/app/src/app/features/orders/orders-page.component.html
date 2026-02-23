@@ -1,0 +1,187 @@
+<section class="page-grid">
+  <mat-card>
+    <div class="card-header">
+      <h2>Todos os pedidos</h2>
+      <button mat-flat-button color="primary" type="button" (click)="openCreateModal()">Novo Pedido</button>
+    </div>
+
+    <div class="table-filters">
+      <mat-form-field appearance="outline">
+        <mat-label>Filtrar por cliente</mat-label>
+        <mat-select [(value)]="selectedClientId" (selectionChange)="onClientFilterChange()">
+          <mat-option value="all">Todos os clientes</mat-option>
+          <mat-option *ngFor="let client of orderClientOptions" [value]="client.id">
+            {{ client.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Busca geral</mat-label>
+        <input
+          matInput
+          [(ngModel)]="searchTerm"
+          (input)="onClientFilterChange()"
+          placeholder="ID, status, produto, cliente"
+        />
+      </mat-form-field>
+
+      <button class="filter-clear-btn" mat-stroked-button type="button" (click)="clearClientFilter()">
+        Limpar
+      </button>
+    </div>
+
+    <table mat-table [dataSource]="orders" class="table">
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef>ID</th>
+        <td mat-cell *matCellDef="let row">{{ shortOrderId(row.id) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="client">
+        <th mat-header-cell *matHeaderCellDef>Cliente</th>
+        <td mat-cell *matCellDef="let row">{{ row.client?.name || row.clientId }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef>Status</th>
+        <td mat-cell *matCellDef="let row">
+          <span class="status-badge" [ngClass]="getStatusBadgeClass(row.status)">
+            {{ getStatusLabel(row.status) }}
+          </span>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="total">
+        <th mat-header-cell *matHeaderCellDef>Total</th>
+        <td mat-cell *matCellDef="let row">R$ {{ row.totalAmount }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acoes</th>
+        <td mat-cell *matCellDef="let row" class="actions-cell">
+          <button mat-icon-button color="primary" (click)="showDetails(row)">
+            <mat-icon>visibility</mat-icon>
+          </button>
+
+          <button mat-icon-button color="accent" (click)="openStatusModal(row)">
+            <mat-icon>autorenew</mat-icon>
+          </button>
+
+          <button *ngIf="isAdmin" mat-icon-button color="warn" (click)="remove(row)">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr class="mat-row no-data-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">Nenhum item encontrado.</td>
+      </tr>
+    </table>
+  </mat-card>
+</section>
+
+<ng-template #orderFormDialog>
+  <div class="modal-shell order-form-shell">
+    <div class="modal-header">
+      <h2>Novo Pedido</h2>
+      <button mat-icon-button type="button" (click)="resetForm()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <form [formGroup]="form" class="form-grid">
+      <mat-form-field appearance="outline" class="full-width" *ngIf="clients.length > 0; else manualClientId">
+        <mat-label>Cliente</mat-label>
+        <mat-select formControlName="clientId">
+          <mat-option *ngFor="let client of clients" [value]="client.id">{{ client.name }}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <ng-template #manualClientId>
+        <div class="client-search">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Pesquisar cliente</mat-label>
+            <input
+              #searchInput
+              matInput
+              placeholder="CNPJ, email, nome ou razao social"
+              (keyup.enter)="searchClients(searchInput.value)"
+            />
+          </mat-form-field>
+
+          <button mat-stroked-button type="button" (click)="searchClients(searchInput.value)">
+            Buscar cliente
+          </button>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width" *ngIf="searchedClients.length > 0">
+          <mat-label>Cliente encontrado</mat-label>
+          <mat-select formControlName="clientId">
+            <mat-option *ngFor="let client of searchedClients" [value]="client.id">
+              {{ client.name }} - {{ client.email }} - {{ client.cnpj }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-template>
+
+      <div class="full-width items-header">
+        <h3>Itens</h3>
+        <button mat-stroked-button type="button" (click)="addItem()">Adicionar item</button>
+      </div>
+
+      <div class="full-width item-row" *ngFor="let item of items.controls; let i = index" [formGroup]="$any(item)">
+        <mat-form-field appearance="outline">
+          <mat-label>Produto</mat-label>
+          <mat-select formControlName="productId">
+            <mat-option *ngFor="let product of products" [value]="product.id">
+              {{ product.name }} (Estoque: {{ product.stock }})
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Quantidade</mat-label>
+          <input matInput type="number" formControlName="quantity" />
+        </mat-form-field>
+
+        <button mat-icon-button color="warn" type="button" (click)="removeItem(i)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+
+      <div class="full-width actions-row">
+        <button mat-flat-button color="primary" type="button" (click)="createOrder()">Criar pedido</button>
+        <button mat-stroked-button type="button" (click)="resetForm()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<ng-template #statusFormDialog>
+  <div class="modal-shell">
+    <div class="modal-header">
+      <h2>Atualizar status</h2>
+      <button mat-icon-button type="button" (click)="closeStatusModal()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="form-grid">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Status</mat-label>
+        <mat-select [(value)]="statusDraft">
+          <mat-option value="PENDING">pendente</mat-option>
+          <mat-option value="APPROVED">aprovado</mat-option>
+          <mat-option value="CANCELLED">cancelado</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="actions-row">
+      <button mat-flat-button color="primary" type="button" (click)="saveStatus()">Salvar</button>
+      <button mat-stroked-button type="button" (click)="closeStatusModal()">Cancelar</button>
+    </div>
+  </div>
+</ng-template>

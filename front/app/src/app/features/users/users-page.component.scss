@@ -1,0 +1,53 @@
+@use '../../../styles/list-page' as list;
+
+.page-grid {
+  @include list.page-grid;
+}
+
+.card-header {
+  @include list.card-header;
+}
+
+.table-filters {
+  @include list.table-filters(1fr auto);
+}
+
+.modal-shell {
+  @include list.modal-shell;
+}
+
+.modal-header {
+  @include list.modal-header;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.actions-row {
+  display: flex;
+  grid-column: 1 / -1;
+  gap: 8px;
+}
+
+.table {
+  width: 100%;
+}
+
+.filter-clear-btn {
+  @include list.filter-clear-btn;
+}
+
+@include list.no-data-row;
+
+@media (max-width: 900px) {
+  .table-filters {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}

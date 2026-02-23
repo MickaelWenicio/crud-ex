@@ -1,0 +1,37 @@
+﻿<section class="cards">
+  <mat-card>
+    <h2>Produtos</h2>
+    <p>Consulte catalogo, estoque e imagens dos produtos.</p>
+    <a mat-flat-button color="primary" routerLink="/products">
+      <mat-icon>inventory_2</mat-icon>
+      Abrir produtos
+    </a>
+  </mat-card>
+
+  <mat-card>
+    <h2>Pedidos</h2>
+    <p>Crie novos pedidos e acompanhe o status dos existentes.</p>
+    <a mat-flat-button color="primary" routerLink="/orders">
+      <mat-icon>receipt_long</mat-icon>
+      Abrir pedidos
+    </a>
+  </mat-card>
+
+  <mat-card *ngIf="isAdmin()">
+    <h2>Clientes</h2>
+    <p>Gerencie cadastro de clientes e consulta por CNPJ.</p>
+    <a mat-flat-button color="primary" routerLink="/clients">
+      <mat-icon>badge</mat-icon>
+      Abrir clientes
+    </a>
+  </mat-card>
+
+  <mat-card *ngIf="isAdmin()">
+    <h2>Usuarios</h2>
+    <p>Cadastre contas de acesso para equipe.</p>
+    <a mat-flat-button color="primary" routerLink="/users">
+      <mat-icon>group</mat-icon>
+      Abrir usuarios
+    </a>
+  </mat-card>
+</section>

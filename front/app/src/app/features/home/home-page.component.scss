@@ -1,0 +1,16 @@
+﻿.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+mat-card {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 12px;
+}
+
+h2 {
+  margin: 0;
+}

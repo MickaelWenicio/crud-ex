@@ -1,0 +1,59 @@
+@mixin page-grid {
+  display: grid;
+  gap: 16px;
+}
+
+@mixin card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 10px;
+  background: rgba(15, 23, 42, 0.03);
+  margin-bottom: 12px;
+
+  h2 {
+    margin: 0;
+    line-height: 1.2;
+  }
+}
+
+@mixin table-filters($columns) {
+  display: grid;
+  grid-template-columns: $columns;
+  gap: 10px;
+  align-items: start;
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+
+@mixin modal-shell {
+  padding: 16px;
+
+  button[mat-flat-button],
+  button[mat-stroked-button] {
+    height: 56px;
+  }
+}
+
+@mixin modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+@mixin filter-clear-btn {
+  height: 56px;
+  min-width: 108px;
+  align-self: start;
+}
+
+@mixin no-data-row {
+  .no-data-row td {
+    text-align: center;
+    color: #6c728b;
+    font-style: italic;
+    padding: 18px 8px;
+  }
+}

@@ -1,0 +1,59 @@
+﻿:host {
+  display: block;
+}
+
+.empty {
+  margin: 16px 0;
+  color: #6c728b;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  max-height: 70vh;
+  overflow: auto;
+  padding: 4px;
+}
+
+.image-card {
+  position: relative;
+  border: 1px solid #e2e7f2;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+
+  img {
+    width: 100%;
+    height: 170px;
+    object-fit: cover;
+    display: block;
+    background: #f1f4fb;
+  }
+}
+
+.delete-button {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 2;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.caption {
+  padding: 8px 10px;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+
+  span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 150px;
+  }
+
+  small {
+    color: #6c728b;
+  }
+}

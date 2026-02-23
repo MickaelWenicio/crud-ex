@@ -1,0 +1,31 @@
+﻿<h2 mat-dialog-title>Imagens - {{ data.productName }}</h2>
+
+<mat-dialog-content>
+  <p *ngIf="images.length === 0" class="empty">Sem imagens cadastradas.</p>
+
+  <div class="gallery" *ngIf="images.length > 0">
+    <div class="image-card" *ngFor="let image of images">
+      <button
+        *ngIf="isAdmin"
+        class="delete-button"
+        mat-icon-button
+        color="warn"
+        (click)="remove(image)"
+        type="button"
+      >
+        <mat-icon>delete</mat-icon>
+      </button>
+
+      <img [src]="imageUrl(image)" [alt]="image.filename" />
+
+      <div class="caption">
+        <span>{{ image.filename }}</span>
+        <small>{{ (image.size / 1024).toFixed(0) }} KB</small>
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="close()" type="button">Fechar</button>
+</mat-dialog-actions>
